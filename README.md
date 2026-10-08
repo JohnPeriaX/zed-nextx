@@ -1,71 +1,146 @@
 # Zed Next
 
-> A reimagined Zed experience with a new UI/UX architecture, native performance, and an extensible WebView foundation.
+<p align="center">
+  <strong>A new interface for the Zed editor.</strong>
+  <br />
+  <sub>Native performance. Modern UX. Extensible by design.</sub>
+</p>
 
-Zed Next is an experimental fork of [Zed](https://github.com/zed-industries/zed) focused on rethinking the editor experience from the ground up while preserving the high-performance editor core that makes Zed special.
+<p align="center">
+  <a href="https://github.com/zed-industries/zed">
+    <img src="https://img.shields.io/badge/based%20on-Zed-111111?style=flat-square" alt="Based on Zed" />
+  </a>
+  <img src="https://img.shields.io/badge/status-experimental-orange?style=flat-square" alt="Experimental" />
+  <img src="https://img.shields.io/badge/UI-GPUI-blue?style=flat-square" alt="GPUI" />
+  <img src="https://img.shields.io/badge/language-Rust-dea584?style=flat-square" alt="Rust" />
+</p>
 
-The goal is simple:
-
-**Keep the engine. Reimagine the experience.**
+<p align="center">
+  <a href="#vision">Vision</a>
+  ·
+  <a href="#architecture">Architecture</a>
+  ·
+  <a href="#webview">WebView</a>
+  ·
+  <a href="#roadmap">Roadmap</a>
+  ·
+  <a href="#development">Development</a>
+</p>
 
 ---
 
-## ✨ Vision
+## Overview
 
-Zed Next explores a new approach to the modern code editor:
+**Zed Next** is an experimental fork of [Zed](https://github.com/zed-industries/zed) focused on rethinking the editor interface from the ground up.
 
-* 🎨 A completely redesigned UI/UX
-* ⚡ Native, GPU-accelerated interfaces powered by GPUI
-* 🧩 A modular workspace and panel architecture
-* ⌨️ Keyboard-first workflows
-* 🎛️ Highly customizable layouts and themes
-* 🌐 First-class WebView integration
-* 🤖 Rich AI interfaces
-* 👀 Built-in web and application previews
-* 🔌 Extensible UI surfaces for future plugins and extensions
+The project preserves Zed's high-performance native editor foundation while exploring a new UI/UX architecture designed around composability, customization, and extensibility.
 
-The long-term goal is to make native UI and web-based UI work together seamlessly inside the editor.
+> **Keep the engine. Reimagine the experience.**
+
+Zed Next is not an attempt to replace Zed's editor engine. It is an exploration of what the Zed experience could become with a fundamentally different interface.
+
+---
+
+## Vision
+
+Modern development environments are becoming more than text editors.
+
+They are increasingly composed of:
+
+* editors
+* terminals
+* previews
+* documentation
+* AI interfaces
+* dashboards
+* browser-based tools
+* development servers
+* interactive extensions
+
+Zed Next explores an architecture where these experiences can coexist naturally inside a single workspace.
+
+```text
+┌────────────────────────────────────────────────────────────┐
+│                        Zed Next                             │
+├──────────────────────┬─────────────────────────────────────┤
+│                      │                                     │
+│       Sidebar        │            Workspace                │
+│                      │                                     │
+│   Explorer           │   ┌─────────┬─────────┬─────────┐   │
+│   Search             │   │ Editor  │ Preview │ WebView │   │
+│   Git                │   └─────────┴─────────┴─────────┘   │
+│   Extensions         │                                     │
+│                      │                                     │
+├──────────────────────┴─────────────────────────────────────┤
+│ Terminal                 Problems              AI          │
+└────────────────────────────────────────────────────────────┘
+```
+
+The goal is a workspace that feels native while remaining flexible enough to host richer interactive experiences.
+
+---
+
+## What We're Building
+
+### Native UI
+
+The primary interface is built with **GPUI**, keeping the application fast, responsive, and deeply integrated with the native editor.
+
+The new UI architecture focuses on:
+
+* Workspace composition
+* Flexible layouts
+* Panels and docks
+* Tabs
+* Command-driven navigation
+* Keyboard-first interaction
+* Consistent design tokens
+* Customizable themes
+* Reusable UI components
+
+### Web Experiences
+
+Zed Next also explores a first-class WebView layer for interfaces that benefit from HTML, CSS, and JavaScript.
+
+Potential applications include:
+
+* Web previews
+* Browser panels
+* HTML/CSS previews
+* React, Vue, and Svelte applications
+* DevTools
+* OAuth and authentication flows
+* AI interfaces
+* Interactive documentation
+* Web-based extensions
+* Local development previews
+
+The long-term goal is to make native and web interfaces feel like parts of the same application rather than separate worlds.
+
+---
+
+## Architecture
+
+Zed Next is designed around three complementary layers:
 
 ```text
                          Zed Next
                             │
-              ┌─────────────┴─────────────┐
-              │                           │
-           Native UI                   Web UI
-             GPUI                    WebView
-              │                           │
-       ┌──────┴──────┐              ┌─────┴─────┐
-       │             │              │           │
-    Editor        Workspace       React       HTML
-    Terminal      Panels          Vue         CSS
-    Sidebar       Commands        Svelte      JS
-       │             │              │           │
-       └─────────────┴──────────────┴───────────┘
-                            │
-                       Zed Core
+             ┌──────────────┼──────────────┐
+             │              │              │
+          Native UI       Core           Web UI
+             │              │              │
+            GPUI       Zed Services       WebView
+             │              │              │
+       ┌─────┼─────┐   ┌────┼─────┐   ┌───┴────┐
+       │     │     │   │    │     │   │        │
+    Panels  Tabs  UX  Editor LSP  Git React   HTML
+                       Terminal     AI   Vue    CSS
 ```
 
----
+### Core
 
-## 🚧 Status
-
-**Experimental / Early Development**
-
-This project is actively exploring a new UI architecture on top of Zed's existing editor core.
-
-Things will change.
-
-APIs, layouts, components, and internal architecture may change significantly while the project evolves.
-
----
-
-## 🏗️ Architecture
-
-Zed Next aims to separate the editor's core functionality from its user interface.
-
-### Zed Core
-
-The existing Zed engine continues to provide the underlying functionality:
+The existing Zed foundation remains responsible for the heavy lifting:
 
 * Editor
 * Buffers
@@ -79,127 +154,121 @@ The existing Zed engine continues to provide the underlying functionality:
 * Language tooling
 * Collaboration
 
-### New UI Layer
+### Native UI
 
-The new UI layer is responsible for:
+The new UI layer provides:
 
-* Workspace layout
+* Workspace
 * Sidebar
 * Tabs
 * Panels
-* Command palette
 * Toolbars
+* Command palette
 * Status bar
 * Themes
 * Navigation
 * UI components
 
-The UI is built using **GPUI** and is designed to evolve independently from the editor core.
+### Web UI
+
+The WebView layer provides a foundation for:
+
+* HTML/CSS/JavaScript interfaces
+* Application previews
+* Rich AI experiences
+* Web-based extensions
+* Interactive tools
 
 ---
 
-## 🌐 WebView
+## WebView
 
-One of the long-term goals of Zed Next is to provide a first-class WebView abstraction.
+One of the long-term goals is a platform-independent WebView abstraction that can become a first-class workspace item.
 
-For example:
+The intended API is conceptually simple:
 
 ```rust
-let webview = WebView::new(
-    "https://example.com"
+let webview = WebView::new("https://example.com");
+
+workspace.open(webview);
+```
+
+A WebView could eventually expose capabilities such as:
+
+```rust
+webview.load_url("http://localhost:3000");
+
+webview.reload();
+
+webview.execute_script(
+    "window.zed.refresh()"
 );
 ```
 
-A WebView could eventually live directly inside a Zed pane:
+And provide communication between JavaScript and the native application:
 
 ```text
-┌─────────────────────────────────────────────┐
-│ Editor │ Preview │ Browser │ AI              │
-├─────────────────────────────────────────────┤
-│                                             │
-│              WebView                        │
-│                                             │
-│        https://example.com                  │
-│                                             │
-└─────────────────────────────────────────────┘
+        Web Application
+               │
+          JavaScript
+               │
+               ▼
+        ┌─────────────┐
+        │   WebView   │
+        │    Bridge   │
+        └──────┬──────┘
+               │
+          Rust / Zed
+               │
+       ┌───────┼────────┐
+       │       │        │
+    Editor   Project   Workspace
 ```
 
-Potential use cases include:
-
-* Browser panels
-* Web previews
-* HTML/CSS previews
-* React/Vue/Svelte applications
-* DevTools
-* OAuth and authentication interfaces
-* Web-based extension interfaces
-* AI interfaces
-* Interactive documentation
-* Local development servers
-
-The WebView layer is intended to remain backend-independent so that different native implementations can be explored in the future.
+The WebView implementation is intentionally designed as an abstraction so that the underlying browser technology can evolve independently.
 
 ---
 
-## 🎯 Project Goals
+## Design Principles
 
-### UI/UX
+### Native First
 
-Build a modern editor interface that is:
+Use GPUI and native rendering where performance, interaction, and editor integration matter most.
 
-* Minimal
-* Fast
-* Keyboard-first
-* Customizable
-* Responsive
-* Composable
+### Composable
 
-### Performance
+UI should be built from reusable primitives rather than tightly coupled screens.
 
-Preserve the performance characteristics of Zed and GPUI.
+### Keyboard First
 
-The new UI should not sacrifice native performance simply to make customization easier.
+Every important workflow should remain accessible without reaching for the mouse.
 
-### Extensibility
+### Extensible
 
-Create clear boundaries between:
+The architecture should make it possible to add new panels, views, tools, and web-powered experiences without rewriting the workspace.
 
-```text
-Core
-  │
-  ├── Editor
-  ├── Project
-  ├── Terminal
-  ├── Git
-  └── LSP
+### Performance Conscious
 
-UI
-  │
-  ├── Workspace
-  ├── Panels
-  ├── Components
-  └── Themes
+New UI capabilities should preserve the responsiveness and performance characteristics expected from Zed.
 
-Web
-  │
-  ├── WebView
-  ├── JavaScript
-  └── Web UI
-```
+### Progressive Architecture
+
+Large architectural changes should be introduced incrementally rather than through a single destructive rewrite.
 
 ---
 
-## 🛣️ Roadmap
+## Roadmap
 
-### Phase 1 · New UI Foundation
+### Phase 1 · UI Foundation
 
-* [ ] New design system
-* [ ] New UI components
+* [ ] Design system
+* [ ] UI component library
 * [ ] New workspace shell
-* [ ] New sidebar
-* [ ] New tabs
-* [ ] New panels
-* [ ] New theme system
+* [ ] Sidebar
+* [ ] Tabs
+* [ ] Panels
+* [ ] Layout system
+* [ ] Theme system
 
 ### Phase 2 · Core Integration
 
@@ -210,96 +279,107 @@ Web
 * [ ] Terminal
 * [ ] Command palette
 * [ ] Keymap integration
+* [ ] Workspace state
 
 ### Phase 3 · WebView
 
 * [ ] WebView abstraction
 * [ ] Native surface integration
 * [ ] Pane integration
-* [ ] Navigation API
+* [ ] Navigation
 * [ ] JavaScript execution
-* [ ] Rust ↔ JavaScript bridge
-* [ ] DevTools integration
+* [ ] Native ↔ JavaScript bridge
+* [ ] DevTools
 
-### Phase 4 · Web-powered Experiences
+### Phase 4 · Web Experiences
 
+* [ ] Local development previews
 * [ ] React/Vue/Svelte previews
-* [ ] AI UI
+* [ ] AI interfaces
 * [ ] Web-based extensions
 * [ ] Interactive documentation
-* [ ] Application previews
 
-### Phase 5 · Long-term Exploration
+### Phase 5 · Extensibility
 
-* [ ] Advanced workspace layouts
-* [ ] Custom UI plugins
-* [ ] UI scripting
+* [ ] Custom workspace layouts
+* [ ] UI extensions
 * [ ] Web/native hybrid extensions
+* [ ] UI scripting
+* [ ] Advanced customization
 
 ---
 
-## 💻 Development
+## Development
 
-Zed Next currently follows the development requirements and build process of upstream Zed.
+Zed Next is built with Rust and currently follows the upstream Zed development environment.
 
-### Building on macOS
+### Prerequisites
 
-See:
+Install the dependencies required by your platform and Rust toolchain.
 
-[Building Zed for macOS](./docs/src/development/macos.md)
+See the upstream development documentation:
 
-### Building on Linux
+* [macOS development](https://github.com/zed-industries/zed/blob/main/docs/src/development/macos.md)
+* [Linux development](https://github.com/zed-industries/zed/blob/main/docs/src/development/linux.md)
+* [Windows development](https://github.com/zed-industries/zed/blob/main/docs/src/development/windows.md)
 
-See:
+### Build
 
-[Building Zed for Linux](./docs/src/development/linux.md)
+```bash
+cargo check
+```
 
-### Building on Windows
-
-See:
-
-[Building Zed for Windows](./docs/src/development/windows.md)
-
----
-
-## 🤝 Contributing
-
-This project is experimental and welcomes exploration, experimentation, and architectural discussion.
-
-Before making large changes, please consider opening an issue or discussion so that architectural decisions can be discussed before implementation.
+For development builds, follow the platform-specific instructions in the upstream documentation.
 
 ---
 
-## 🙏 Credits
+## Contributing
 
-Zed Next is based on [Zed](https://github.com/zed-industries/zed), created by Zed Industries and the creators of Atom and Tree-sitter.
+Zed Next is an experimental project.
 
-This project would not exist without the work of the Zed team and the open-source community.
+Architecture and APIs may change substantially while the project evolves.
 
-Upstream project:
+Before submitting a large architectural change, please open an issue or discussion to establish the direction first.
 
-https://github.com/zed-industries/zed
-
----
-
-## 📜 Licensing
-
-Zed Next is derived from Zed and remains subject to the licensing terms of the upstream project.
-
-Zed source code is licensed primarily under **GPL-3.0-or-later**, with Apache-2.0 components where marked.
-
-License information for third-party dependencies must be correctly maintained.
-
-See the upstream project and repository license files for complete licensing information.
+Small improvements, bug fixes, documentation, experiments, and design proposals are welcome.
 
 ---
 
-## 🌱 Why Zed Next?
+## Relationship to Zed
 
-Zed proved that a code editor can be fast, native, collaborative, and beautiful.
+Zed Next is derived from the open-source [Zed](https://github.com/zed-industries/zed) project.
 
-Zed Next explores a different question:
+Zed provides the foundation for the editor, rendering infrastructure, language tooling, collaboration, and other core functionality.
 
-> **What happens if we keep that engine, but completely rethink the interface around it?**
+Zed Next focuses primarily on exploring a different interface and extensibility model on top of that foundation.
 
-That's what this project is about.
+---
+
+## License
+
+Zed Next is derived from Zed and remains subject to the applicable upstream licensing terms.
+
+Zed source code is licensed primarily under **GPL-3.0-or-later**, with Apache-2.0 components where indicated.
+
+Third-party dependency licenses must also be preserved in accordance with the requirements of the respective projects.
+
+See the repository license files and upstream Zed project for complete licensing information.
+
+---
+
+## Acknowledgements
+
+Zed Next would not exist without the work of the Zed team and the open-source community.
+
+Special thanks to the creators and contributors of:
+
+* [Zed](https://github.com/zed-industries/zed)
+* [GPUI](https://github.com/zed-industries/zed/tree/main/crates/gpui)
+* [Tree-sitter](https://github.com/tree-sitter/tree-sitter)
+* [Atom](https://github.com/atom/atom)
+
+---
+
+<p align="center">
+  <sub>Built on Zed. Reimagined for what's next.</sub>
+</p>
